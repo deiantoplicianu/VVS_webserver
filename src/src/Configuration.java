@@ -8,10 +8,8 @@ public class Configuration {
     private String fileNotFound = "404.html";
     private String methodNotSupported = "not_supported.html";
     private String state;
-    // port to listen connection
     private int port = 8080;
 
-    // verbose mode
     public static boolean verbose = true;
 
     public int getPort(){

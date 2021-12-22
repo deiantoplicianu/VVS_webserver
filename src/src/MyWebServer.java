@@ -17,7 +17,7 @@ public class MyWebServer extends Thread{
 
     protected Socket clientSocket;
     
-    static Scanner myObj = new Scanner(System.in);  // Create a Scanner object
+    static Scanner myObj = new Scanner(System.in); 
     
     
 
@@ -31,7 +31,6 @@ public class MyWebServer extends Thread{
             ServerSocket serverConnect = new ServerSocket(configManager.getPort());
             System.out.println("Server started.\nListening for connections on port : " + configManager.getPort());
 
-            // we listen until user halts server execution
             while (true) {
                 
             	WebServer myServer = new WebServer(serverConnect.accept(), configManager);      	
@@ -41,7 +40,6 @@ public class MyWebServer extends Thread{
                     System.out.println("Connecton opened. (" + new Date() + ")");
                 }
 
-                // create dedicated thread to manage the client connection
                 Thread thread = new Thread(myServer);
                 thread.start();
             }

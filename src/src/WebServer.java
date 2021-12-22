@@ -16,58 +16,43 @@ public class WebServer extends Thread{
 
     @Override
     public void run() {
-        // we manage our particular client connection
         BufferedReader in = null; 
         PrintWriter out = null; 
         BufferedOutputStream dataOut = null;
         String fileRequested = null;
 
         try {
-            // we read characters from the client via input stream on the socket
             in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
-            // we get character output stream to client (for headers)
             out = new PrintWriter(connect.getOutputStream());
-            // get binary output stream to client (for requested data)
             dataOut = new BufferedOutputStream(connect.getOutputStream());
-
-            // get first line of the request from the client
             String input = in.readLine();
-            // we parse the request with a string tokenizer
             StringTokenizer parse = new StringTokenizer(input);
-            String method = parse.nextToken().toUpperCase(); // we get the HTTP method of the client
-            // we get file requested
+            String method = parse.nextToken().toUpperCase(); 
             fileRequested = parse.nextToken().toLowerCase();
 
-            // we support only GET and HEAD methods, we check
             if (!method.equals("GET")  &&  !method.equals("HEAD")) {
                 if (Configuration.verbose) {
                     System.out.println("501 Not Implemented : " + method + " method.");
                 }
 
-                // we return the not supported file to the client
                 File file = new File(configManager.getWebRootFile(), configManager.getNotSuportedPage());
                 int fileLength = (int) file.length();
                 String contentMimeType = "text/html";
-                //read content to return to client
                 byte[] fileData = readFileData(file, fileLength);
 
-                // we send HTTP Headers with data to client
                 out.println("HTTP/1.1 501 Not Implemented");
                 out.println("Server: Java HTTP Server");
                 out.println("Date: " + new Date());
                 out.println("Content-type: " + contentMimeType);
                 out.println("Content-length: " + fileLength);
-                out.println(); // blank line between headers and content, very important !
-                out.flush(); // flush character output stream buffer
-                // file
+                out.println(); 
+                out.flush(); 
                 dataOut.write(fileData, 0, fileLength);
                 dataOut.flush();
 
             }
             
             else {
-            	
-                // GET or HEAD method
             	
             	if(configManager.getState().equals("running")) {
             		if (fileRequested.endsWith("/")) {
@@ -78,17 +63,16 @@ public class WebServer extends Thread{
                     int fileLength = (int) file.length();
                     String content = getContentType(fileRequested);
 
-                    if (method.equals("GET")) { // GET method so we return content
+                    if (method.equals("GET")) { 
                         byte[] fileData = readFileData(file, fileLength);
 
-                        // send HTTP Headers
                         out.println("HTTP/1.1 200 OK");
                         out.println("Server: Java HTTP Server");
                         out.println("Date: " + new Date());
                         out.println("Content-type: " + content);
                         out.println("Content-length: " + fileLength);
-                        out.println(); // blank line between headers and content, very important !
-                        out.flush(); // flush character output stream buffer
+                        out.println(); 
+                        out.flush(); 
 
                         dataOut.write(fileData, 0, fileLength);
                         dataOut.flush();
@@ -102,17 +86,16 @@ public class WebServer extends Thread{
                     int fileLength = (int) file.length();
                     String content = getContentType("not_supported.html");
 
-                    if (method.equals("GET")) { // GET method so we return content
+                    if (method.equals("GET")) { 
                         byte[] fileData = readFileData(file, fileLength);
 
-                        // send HTTP Headers
                         out.println("HTTP/1.1 200 OK");
                         out.println("Server: Java HTTP Server");
                         out.println("Date: " + new Date());
                         out.println("Content-type: " + content);
                         out.println("Content-length: " + fileLength);
-                        out.println(); // blank line between headers and content, very important !
-                        out.flush(); // flush character output stream buffer
+                        out.println(); 
+                        out.flush(); 
 
                         dataOut.write(fileData, 0, fileLength);
                         dataOut.flush();
@@ -127,17 +110,16 @@ public class WebServer extends Thread{
                         int fileLength = (int) file.length();
                         String content = getContentType("maintenance.html");
 
-                        if (method.equals("GET")) { // GET method so we return content
+                        if (method.equals("GET")) { 
                             byte[] fileData = readFileData(file, fileLength);
 
-                            // send HTTP Headers
                             out.println("HTTP/1.1 200 OK");
                             out.println("Server: Java HTTP Server");
                             out.println("Date: " + new Date());
                             out.println("Content-type: " + content);
                             out.println("Content-length: " + fileLength);
-                            out.println(); // blank line between headers and content, very important !
-                            out.flush(); // flush character output stream buffer
+                            out.println(); 
+                            out.flush(); 
 
                             dataOut.write(fileData, 0, fileLength);
                             dataOut.flush();
@@ -167,7 +149,7 @@ public class WebServer extends Thread{
                 in.close();
                 out.close();
                 dataOut.close();
-                connect.close(); // we close socket connection
+                connect.close(); 
             } catch (Exception e) {
                 System.err.println("Error closing stream : " + e.getMessage());
             }
@@ -195,7 +177,6 @@ public class WebServer extends Thread{
         return fileData;
     }
 
-    // return supported MIME Types
     private String getContentType(String fileRequested) {
         if (fileRequested.endsWith(".htm")  ||  fileRequested.endsWith(".html"))
             return "text/html";
@@ -214,8 +195,8 @@ public class WebServer extends Thread{
         out.println("Date: " + new Date());
         out.println("Content-type: " + content);
         out.println("Content-length: " + fileLength);
-        out.println(); // blank line between headers and content, very important !
-        out.flush(); // flush character output stream buffer
+        out.println(); 
+        out.flush();
 
         dataOut.write(fileData, 0, fileLength);
         dataOut.flush();
