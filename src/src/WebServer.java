@@ -6,25 +6,27 @@ import java.util.Date;
 import java.util.StringTokenizer;
 
 public class WebServer extends Thread{
-    private Socket connect;
-    ConfigManager configManager;
+    
+    ConfigManager configurationManager;
+    private Socket connection;
 
     public WebServer(Socket c, ConfigManager configManager) {
-        connect = c;
-        this.configManager = configManager;
+        connection = c;
+        this.configurationManager = configManager;
     }
 
     @Override
     public void run() {
-        BufferedReader in = null; 
+        
+    	BufferedReader in = null; 
         PrintWriter out = null; 
         BufferedOutputStream dataOut = null;
         String fileRequested = null;
 
         try {
-            in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
-            out = new PrintWriter(connect.getOutputStream());
-            dataOut = new BufferedOutputStream(connect.getOutputStream());
+            in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            out = new PrintWriter(connection.getOutputStream());
+            dataOut = new BufferedOutputStream(connection.getOutputStream());
             String input = in.readLine();
             StringTokenizer parse = new StringTokenizer(input);
             String method = parse.nextToken().toUpperCase(); 
@@ -35,7 +37,7 @@ public class WebServer extends Thread{
                     System.out.println("501 Not Implemented : " + method + " method.");
                 }
 
-                File file = new File(configManager.getWebRootFile(), configManager.getNotSuportedPage());
+                File file = new File(configurationManager.getWebRootFile(), configurationManager.getNotSuportedPage());
                 int fileLength = (int) file.length();
                 String contentMimeType = "text/html";
                 byte[] fileData = readFileData(file, fileLength);
@@ -54,12 +56,12 @@ public class WebServer extends Thread{
             
             else {
             	
-            	if(configManager.getState().equals("running")) {
+            	if(configurationManager.getState().equals("running")) {
             		if (fileRequested.endsWith("/")) {
-                        fileRequested += configManager.getDefaultPage();
+                        fileRequested += configurationManager.getDefaultPage();
                     }
 
-                    File file = new File(configManager.getWebRootFile(), fileRequested);
+                    File file = new File(configurationManager.getWebRootFile(), fileRequested);
                     int fileLength = (int) file.length();
                     String content = getContentType(fileRequested);
 
@@ -80,9 +82,9 @@ public class WebServer extends Thread{
                     
             	}
             	
-            	else if(configManager.getState().equals("stopped")) {
+            	else if(configurationManager.getState().equals("stopped")) {
             		
-            		File file = new File(configManager.getWebRootFile(), "not_supported.html");
+            		File file = new File(configurationManager.getWebRootFile(), "not_supported.html");
                     int fileLength = (int) file.length();
                     String content = getContentType("not_supported.html");
 
@@ -99,14 +101,12 @@ public class WebServer extends Thread{
 
                         dataOut.write(fileData, 0, fileLength);
                         dataOut.flush();
-                    }
-                    
-                    
+                    }                                       
             		
             	}
             	
             		else {
-            			File file = new File(configManager.getWebRootFile(), "maintenance.html");
+            			File file = new File(configurationManager.getWebRootFile(), "maintenance.html");
                         int fileLength = (int) file.length();
                         String content = getContentType("maintenance.html");
 
@@ -133,7 +133,7 @@ public class WebServer extends Thread{
                 }
 
             }
-            }
+           }
 
         } catch (FileNotFoundException fnfe) {
             try {
@@ -149,7 +149,7 @@ public class WebServer extends Thread{
                 in.close();
                 out.close();
                 dataOut.close();
-                connect.close(); 
+                connection.close(); 
             } catch (Exception e) {
                 System.err.println("Error closing stream : " + e.getMessage());
             }
@@ -185,7 +185,7 @@ public class WebServer extends Thread{
     }
 
     private void fileNotFound(PrintWriter out, OutputStream dataOut, String fileRequested) throws IOException {
-        File file = new File(configManager.getWebRootFile(), configManager.getNotFoundPage());
+        File file = new File(configurationManager.getWebRootFile(), configurationManager.getNotFoundPage());
         int fileLength = (int) file.length();
         String content = "text/html";
         byte[] fileData = readFileData(file, fileLength);

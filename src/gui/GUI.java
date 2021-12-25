@@ -73,7 +73,7 @@ public class GUI {
 		
 		frame.add(panel,BorderLayout.CENTER);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setTitle("VVS Project GUI");
+		frame.setTitle("WebServer GUI");
 		frame.pack();
 		frame.setVisible(true);
 		

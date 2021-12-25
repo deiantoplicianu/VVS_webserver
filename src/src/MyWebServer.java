@@ -16,17 +16,13 @@ import static org.junit.Assert.assertArrayEquals;
 public class MyWebServer extends Thread{
 
     protected Socket clientSocket;
-    
     static Scanner myObj = new Scanner(System.in); 
     
-    
-
     public static void main(String[] args) throws IOException {
-        GUI.main(null);
-    	
+        
+    	GUI.main(null);  	
     	ConfigManager configManager = new ConfigManager(new Configuration());
-    	
-
+    
         try {
             ServerSocket serverConnect = new ServerSocket(configManager.getPort());
             System.out.println("Server started.\nListening for connections on port : " + configManager.getPort());
@@ -48,7 +44,5 @@ public class MyWebServer extends Thread{
             System.err.println("Server Connection error : " + e.getMessage());
         }
     }
-
-	
 
 }

@@ -13,11 +13,9 @@ import java.util.Scanner;
 
 import static org.junit.Assert.assertEquals;
 
-
 public class WebServerTest {
 
     Scanner keyboard = new Scanner(System.in);
-
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 	private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
 	private final PrintStream originalOut = System.out;
@@ -63,7 +61,7 @@ public class WebServerTest {
              connection = (HttpURLConnection) url.openConnection();
               connection.setRequestMethod("GET");
              System.out.println(connection.getInputStream());
-     }catch(IOException e) {
+      }catch(IOException e) {
          System.out.println("failed");
        }
    }
